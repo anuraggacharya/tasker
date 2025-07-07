@@ -1,0 +1,122 @@
+{% extends "base.html" %} {% block content %}
+<div class="container">
+    <div class="mdl-grid">
+        <!-- Add Task Button -->
+        <div class="mdl-cell mdl-cell--12-col">
+            <button
+                id="add-task-btn"
+                class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored"
+            >
+                <i class="material-icons">add</i>
+            </button>
+        </div>
+
+        <!-- Task Columns -->
+        <div class="mdl-cell mdl-cell--4-col">
+            <h4 style="color:">To Do</h4>
+            <div
+                class="task-list"
+                id="todo-list"
+                data-status="To Do"
+                style="border: solid 2px #ffb3ba"
+            >
+                <!-- Tasks will be loaded here via AJAX -->
+            </div>
+        </div>
+
+        <div class="mdl-cell mdl-cell--4-col">
+            <h4 style="">In Progress</h4>
+            <div
+                class="task-list"
+                id="inprogress-list"
+                data-status="In Progress"
+                style="border: solid 2px #ffd8a8"
+            >
+                <!-- Tasks will be loaded here via AJAX -->
+            </div>
+        </div>
+
+        <div class="mdl-cell mdl-cell--4-col">
+            <h4>Done</h4>
+            <div
+                class="task-list"
+                id="done-list"
+                data-status="Done"
+                style="border: solid 2px #b5ead7"
+            >
+                <!-- Tasks will be loaded here via AJAX -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Task Dialog -->
+<dialog class="mdl-dialog" id="task-dialog">
+    <h4 class="mdl-dialog__title">Add New Task</h4>
+    <div class="mdl-dialog__content">
+        <form id="task-form">
+            <div
+                class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
+            >
+                <input
+                    class="mdl-textfield__input"
+                    type="text"
+                    id="task-title"
+                    required
+                />
+                <label class="mdl-textfield__label" for="task-title"
+                    >Title</label
+                >
+            </div>
+            <div
+                class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
+            >
+                <textarea
+                    class="mdl-textfield__input"
+                    type="text"
+                    id="task-description"
+                    rows="3"
+                ></textarea>
+                <label class="mdl-textfield__label" for="task-description"
+                    >Description</label
+                >
+            </div>
+            <div
+                class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
+            >
+                <input
+                    class="mdl-textfield__input"
+                    type="date"
+                    id="task-due-date"
+                />
+                <label class="mdl-textfield__label" for="task-due-date"
+                    >Due Date</label
+                >
+            </div>
+            <div
+                class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
+            >
+                <input
+                    class="mdl-textfield__input"
+                    type="text"
+                    id="task-assignee"
+                />
+                <label class="mdl-textfield__label" for="task-assignee"
+                    >Assignee</label
+                >
+            </div>
+            <input type="hidden" id="task-id" />
+        </form>
+    </div>
+    <div class="mdl-dialog__actions">
+        <button type="button" class="mdl-button" id="cancel-btn">Cancel</button>
+        <button
+            type="button"
+            class="mdl-button mdl-button--colored"
+            id="save-btn"
+        >
+            Save
+        </button>
+    </div>
+</dialog>
+{% endblock %}
