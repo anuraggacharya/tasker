@@ -49,15 +49,30 @@
         </div>
     </div>
 </div>
+<!-- Dashboard Section -->
+<section class="mdl-layout__tab-panel" id="dashboard">
+    <div class="page-content">
+        <div class="dashboard-container">
+            <h3>Team Performance Dashboard</h3>
 
+            <!-- Dashboard content (same as previously provided) -->
+            <div class="mdl-grid">
+                <!-- Completion Rate -->
+                <div class="mdl-cell mdl-cell--4-col">
+                    <div class="dashboard-card mdl-card mdl-shadow--2dp">
+                        <!-- ... rest of dashboard content ... -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 <!-- Add Task Dialog -->
 <dialog class="mdl-dialog" id="task-dialog">
     <h4 class="mdl-dialog__title">Add New Task</h4>
     <div class="mdl-dialog__content">
         <form id="task-form">
-            <div
-                class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
-            >
+            <div class="mdl-textfield mdl-js-textfield">
                 <input
                     class="mdl-textfield__input"
                     type="text"
@@ -66,6 +81,19 @@
                 />
                 <label class="mdl-textfield__label" for="task-title"
                     >Title</label
+                >
+            </div>
+            <div
+                class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
+            >
+                <textarea
+                    class="mdl-textfield__input"
+                    type="text"
+                    id="uc-name"
+                    rows="3"
+                ></textarea>
+                <label class="mdl-textfield__label" for="uc-name"
+                    >Use case</label
                 >
             </div>
             <div
@@ -87,10 +115,34 @@
                 <input
                     class="mdl-textfield__input"
                     type="date"
+                    id="task-start-date"
+                />
+                <label class="mdl-textfield__label" for="task-start-date"
+                    >Start Date</label
+                >
+            </div>
+            <div
+                class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
+            >
+                <input
+                    class="mdl-textfield__input"
+                    type="date"
                     id="task-due-date"
                 />
                 <label class="mdl-textfield__label" for="task-due-date"
                     >Due Date</label
+                >
+            </div>
+            <div
+                class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
+            >
+                <input
+                    class="mdl-textfield__input"
+                    type="date"
+                    id="task-close-date"
+                />
+                <label class="mdl-textfield__label" for="task-close-date"
+                    >Close Date</label
                 >
             </div>
             <div
@@ -103,6 +155,19 @@
                 />
                 <label class="mdl-textfield__label" for="task-assignee"
                     >Assignee</label
+                >
+            </div>
+            <div
+                class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
+            >
+                <select class="mdl-textfield__input" id="task-class">
+                    <option value="analysis">Analysis</option>
+                    <option value="development">Development</option>
+                    <option value="issue">Issue</option>
+                    <option value="mom">MoM/Meeting Notes</option>
+                </select>
+                <label class="mdl-textfield__label" for="task-class"
+                    >Task Class</label
                 >
             </div>
             <input type="hidden" id="task-id" />
@@ -119,4 +184,9 @@
         </button>
     </div>
 </dialog>
+
+<!-- Load Chart.js -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> -->
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+
 {% endblock %}

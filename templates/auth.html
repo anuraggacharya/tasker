@@ -1,0 +1,131 @@
+<!-- templates/auth.html -->
+{% extends "authbase.html" %} {% block content %}
+<div class="auth-container">
+    <div class="mdl-card mdl-shadow--6dp auth-card">
+        <div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect auth-tabs">
+            <div class="mdl-tabs__tab-bar">
+                <a href="#signin-panel" class="mdl-tabs__tab is-active"
+                    >Sign In</a
+                >
+                <a href="#signup-panel" class="mdl-tabs__tab">Sign Up</a>
+            </div>
+
+            <!-- Sign In Panel -->
+            <div class="mdl-tabs__panel is-active" id="signin-panel">
+                <h4>Sign In</h4>
+                <form id="signin-form">
+                    <div
+                        class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
+                    >
+                        <input
+                            class="mdl-textfield__input"
+                            type="text"
+                            id="signin-username"
+                            required
+                        />
+                        <label
+                            class="mdl-textfield__label"
+                            for="signin-username"
+                            >Username</label
+                        >
+                    </div>
+                    <div
+                        class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
+                    >
+                        <input
+                            class="mdl-textfield__input"
+                            type="password"
+                            id="signin-password"
+                            required
+                        />
+                        <label
+                            class="mdl-textfield__label"
+                            for="signin-password"
+                            >Password</label
+                        >
+                    </div>
+                    <button
+                        type="submit"
+                        class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored"
+                    >
+                        Sign In
+                    </button>
+                </form>
+                <div id="signin-message" class="hidden"></div>
+            </div>
+
+            <!-- Sign Up Panel -->
+            <div class="mdl-tabs__panel" id="signup-panel">
+                <h4>Sign Up</h4>
+                <form id="signup-form">
+                    <div
+                        class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
+                    >
+                        <input
+                            class="mdl-textfield__input"
+                            type="text"
+                            id="signup-username"
+                            required
+                        />
+                        <label
+                            class="mdl-textfield__label"
+                            for="signup-username"
+                            >Username</label
+                        >
+                    </div>
+                    <div
+                        class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
+                    >
+                        <input
+                            class="mdl-textfield__input"
+                            type="email"
+                            id="signup-email"
+                            required
+                        />
+                        <label class="mdl-textfield__label" for="signup-email"
+                            >Email</label
+                        >
+                    </div>
+                    <div
+                        class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
+                    >
+                        <input
+                            class="mdl-textfield__input"
+                            type="password"
+                            id="signup-password"
+                            required
+                        />
+                        <label
+                            class="mdl-textfield__label"
+                            for="signup-password"
+                            >Password</label
+                        >
+                    </div>
+                    <div
+                        class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
+                    >
+                        <input
+                            class="mdl-textfield__input"
+                            type="password"
+                            id="signup-confirm-password"
+                            required
+                        />
+                        <label
+                            class="mdl-textfield__label"
+                            for="signup-confirm-password"
+                            >Confirm Password</label
+                        >
+                    </div>
+                    <button
+                        type="submit"
+                        class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored"
+                    >
+                        Sign Up
+                    </button>
+                </form>
+                <div id="signup-message" class="hidden"></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

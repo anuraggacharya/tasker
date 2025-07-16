@@ -57,38 +57,47 @@ $(document).ready(function () {
   }
   // Load tasks function
   function loadTasks() {
-    $.get("/api/tasks", function (tasks) {
-      console.log("Raw tasks data:", tasks); // Verify data structure
+    const token = localStorage.getItem("jwt_token"); // Replace with your actual token
+    $.ajax({
+      url: "/api/tasks",
+      method: "GET",
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+      success: function (tasks) {
+        //console.log("Raw tasks data:", tasks); // Verify data structure
 
-      // Clear all columns
-      $("#todo-list, #inprogress-list, #done-list").empty();
+        // Clear all columns
+        $("#todo-list, #inprogress-list, #done-list").empty();
 
-      // Process each task
-      tasks.forEach((task) => {
-        console.log("Processing task:", task); // Debug individual task
+        // Process each task
+        tasks.forEach((task) => {
+          //console.log("Processing task:", task); // Debug individual task
 
-        // Determine which column this task belongs to
-        const columnMap = {
-          "To Do": "#todo-list",
-          "In Progress": "#inprogress-list",
-          Done: "#done-list",
-        };
+          // Determine which column this task belongs to
+          const columnMap = {
+            "To Do": "#todo-list",
+            "In Progress": "#inprogress-list",
+            Done: "#done-list",
+          };
 
-        const targetColumn = columnMap[task.status];
+          const targetColumn = columnMap[task.status];
 
-        if (targetColumn) {
-          const cardHtml = createTaskCard(task);
-          $(targetColumn).append(cardHtml);
-        } else {
-          console.warn("Task with unknown status:", task);
-        }
-      });
-      //setupDragAndDrop();
-      // Initialize Material Design Lite components for new elements
-      componentHandler.upgradeDom();
-      initializeDragAndDrop();
-    }).fail(function (error) {
-      console.error("Error loading tasks:", error);
+          if (targetColumn) {
+            const cardHtml = createTaskCard(task);
+            $(targetColumn).append(cardHtml);
+          } else {
+            console.warn("Task with unknown status:", task);
+          }
+        });
+
+        // Initialize MDL components and drag/drop
+        componentHandler.upgradeDom();
+        initializeDragAndDrop();
+      },
+      error: function (error) {
+        console.error("Error loading tasks:", error);
+      },
     });
   }
 
@@ -105,20 +114,33 @@ $(document).ready(function () {
         : "No due date",
       assignee: task.assignee || "Unassigned",
       status: task.status || "To Do",
+      close_date: task.close_date
+        ? new Date(task.close_date).toLocaleDateString()
+        : "No close date",
+      start_date: task.start_date
+        ? new Date(task.start_date).toLocaleDateString()
+        : "No start date",
+      task_class: task.task_class || "No class",
+      uc_name: task.uc_name || "No UC assigned",
     };
 
     return `
       <div class="task-card mdl-card mdl-shadow--2dp" data-id="${safeTask.id}" draggable="true">
           <div class="mdl-card__title">
-              <h2 class="mdl-card__title-text">${safeTask.title}</h2>
+              <h2 class="mdl-card__title-text">${safeTask.uc_name} - ${safeTask.title}</h2>
           </div>
           <div class="mdl-card__supporting-text">
               ${safeTask.description}
           </div>
+
           <div class="mdl-card__supporting-text">
               <strong>Created:</strong> ${safeTask.created_date}<br>
-              <strong>Due:</strong> ${safeTask.due_date}<br>
-              <strong>Assignee:</strong> ${safeTask.assignee}
+              <strong>Start date:</strong> ${safeTask.start_date}<br>
+              <strong>Due date:</strong> ${safeTask.due_date}<br>
+              <strong>Close date:</strong> ${safeTask.close_date}<br>
+              <strong>Assignee:</strong> ${safeTask.assignee}<br>
+              <strong>Task class:</strong> ${safeTask.task_class}<br>
+
           </div>
           <div class="mdl-card__actions mdl-card--border">
               <button class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect edit-btn"
@@ -140,16 +162,28 @@ $(document).ready(function () {
       description: $("#task-description").val(),
       due_date: $("#task-due-date").val(),
       assignee: $("#task-assignee").val(),
+      task_start_date: $("#task-start-date").val(),
+      task_close_date: $("#task-close-date").val(),
+      task_class: $("#task-class").val(),
+      uc_name: $("#uc-name").val(),
     };
 
     const taskId = $("#task-id").val();
     const url = taskId ? `/api/tasks/${taskId}` : "/api/tasks";
     const method = taskId ? "PUT" : "POST";
-
+    const token = localStorage.getItem("jwt_token");
     $.ajax({
       url: url,
       type: method,
       contentType: "application/json",
+      xhrFields: {
+        withCredentials: true,
+      },
+      headers: {
+        Authorization: "Bearer " + token,
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
       data: JSON.stringify(taskData),
       success: function (response) {
         dialog.close();
@@ -164,10 +198,20 @@ $(document).ready(function () {
 
   // Update task status
   function updateTaskStatus(taskId, newStatus) {
+    const token = localStorage.getItem("jwt_token");
+
     $.ajax({
       url: `/api/tasks/${taskId}`,
       type: "PUT",
       contentType: "application/json",
+      xhrFields: {
+        withCredentials: true,
+      },
+      headers: {
+        Authorization: "Bearer " + token,
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
       data: JSON.stringify({ status: newStatus }),
       success: loadTasks,
     });
@@ -177,11 +221,18 @@ $(document).ready(function () {
     const taskId = $(this).data("id");
     console.log("Editing task ID:", taskId);
 
+    const token = localStorage.getItem("jwt_token"); // Get your JWT token from storage
+
     // Show loading state
     $("#task-dialog .mdl-dialog__content").addClass("loading");
 
-    $.get(`/api/tasks/${taskId}`)
-      .done(function (task) {
+    $.ajax({
+      url: `/api/tasks/${taskId}`,
+      method: "GET",
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+      success: function (task) {
         console.log("Task data received:", task);
 
         if (task.error) {
@@ -197,22 +248,28 @@ $(document).ready(function () {
         // Format date for input[type=date]
         const dueDate = task.due_date ? task.due_date.split(" ")[0] : "";
         $("#task-due-date").val(dueDate);
-
+        const startDate = task.start_date ? task.start_date.split(" ")[0] : "";
+        $("#task-start-date").val(startDate);
+        const closeDate = task.close_date ? task.close_date.split(" ")[0] : "";
+        $("#task-close-date").val(closeDate);
         $("#task-assignee").val(task.assignee);
-
+        $("#task-class").val(task.task_class);
+        $("#uc-name").val(task.uc_name);
         // Update dialog title
         $("#task-dialog .mdl-dialog__title").text("Edit Task");
 
         // Show dialog
         dialog.showModal();
-      })
-      .fail(function (xhr, status, error) {
+        componentHandler.upgradeDom();
+      },
+      error: function (xhr, status, error) {
         console.error("Error loading task:", status, error);
         alert("Failed to load task. Please try again.");
-      })
-      .always(function () {
+      },
+      complete: function () {
         $("#task-dialog .mdl-dialog__content").removeClass("loading");
-      });
+      },
+    });
   });
 
   // Delete button click (delegated event)
@@ -220,7 +277,16 @@ $(document).ready(function () {
     const taskId = $(this).data("id");
 
     if (confirm("Are you sure you want to delete this task?")) {
+      token = localStorage.getItem("jwt_token");
       $.ajax({
+        xhrFields: {
+          withCredentials: true,
+        },
+        headers: {
+          Authorization: "Bearer " + token,
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
         url: `/api/tasks/${taskId}`,
         type: "DELETE",
         success: loadTasks,
@@ -232,3 +298,36 @@ $(document).ready(function () {
 function setupDragAndDrop() {
   initializeDragAndDrop();
 }
+
+function loadDashboardData() {
+  console.log("Loading dashboard data...");
+
+  fetch("/api/dashboard/metrics")
+    .then((response) => {
+      console.log("API response status:", response.status);
+      return response.json();
+    })
+    .then((data) => {
+      console.log("Received dashboard data:", data);
+
+      if (data.error) {
+        console.error("Dashboard error:", data.error);
+        return;
+      }
+
+      renderCompletionRate(data.completion_rate || { completed: 0, total: 0 });
+      renderOnTimeDelivery(data.on_time_delivery || { on_time: 0, total: 0 });
+      renderAvgCompletionTime(data.avg_completion_time || 0);
+    })
+    .catch((error) => {
+      console.error("Error loading dashboard:", error);
+    });
+}
+document.addEventListener("DOMContentLoaded", function () {
+  // Initialize only when dashboard tab is clicked
+  document
+    .querySelector('a[href="#dashboard"]')
+    ?.addEventListener("click", loadDashboardData);
+});
+
+// auth logi

@@ -76,3 +76,96 @@
 .task-card.dragging {
     z-index: 1000;
 }
+
+/* Dashboard Specific Styles */
+.dashboard-container {
+    padding: 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.dashboard-card {
+    width: 100%;
+    min-height: 0;
+    margin-bottom: 20px;
+}
+
+.dashboard-card .mdl-card__title {
+    background-color: #3f51b5;
+    color: white;
+    height: 80px;
+}
+
+.dashboard-card .mdl-card__supporting-text {
+    width: 100%;
+    padding: 16px;
+}
+
+.metric-value {
+    text-align: center;
+    font-size: 1.2em;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.metric-value span {
+    color: #3f51b5;
+}
+
+/* Table styles */
+.mdl-data-table {
+    white-space: normal;
+    width: 100%;
+}
+
+/* Responsive adjustments */
+@media (max-width: 840px) {
+    .mdl-cell {
+        width: 100%;
+    }
+}
+
+/* Tab styles */
+.mdl-layout__tab-bar {
+    padding: 0;
+    padding-left: 16px;
+    box-sizing: border-box;
+    height: 48px;
+    width: 100%;
+}
+
+.mdl-layout__tab {
+    text-transform: uppercase;
+    font-weight: 500;
+}
+
+/* Dashboard container */
+.dashboard-container {
+    padding: 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.dashboard-card {
+    width: 100%;
+    min-height: 0;
+    margin-bottom: 20px;
+}
+/* Chart container styles */
+.dashboard-card .mdl-card__supporting-text {
+    position: relative;
+    height: 250px; /* Fixed height */
+    padding: 16px;
+}
+
+/* Chart canvas styles */
+.dashboard-card canvas {
+    width: 100% !important;
+    height: 100% !important;
+}
+#completion-chart,
+#ontime-chart,
+#completion-time-chart {
+    width: 100% !important;
+    height: 200px !important;
+}
